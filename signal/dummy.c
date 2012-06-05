@@ -1,4 +1,4 @@
-/*
+/* 
  * dummy.c
  *
  *  Created on: Oct 14, 2011
@@ -7,10 +7,11 @@
 #include <stdio.h>
 #include<time.h>
 
-int main () {
-	for (;;) {
-		printf (".");
-		fflush (stdout);
-		sleep (1);
-	}
+int main() {
+    for (;;)
+    {
+        printf(".");
+        fflush(stdout);
+        sleep(1);
+    }
 }
