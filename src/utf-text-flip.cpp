@@ -1,12 +1,7 @@
-//============================================================================
-// Name        : utf-text-flip.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C, Ansi-style
-//============================================================================
 
 #include <iostream>
+#include <sstream>
+
 using namespace std;
 
 const unsigned int MAP[][2] = { { 0x0021, 0x00A1 },
@@ -91,9 +86,9 @@ unsigned int lookupCode(unsigned int c) {
  */
 int toNaturalOrder(unsigned long v, size_t s) {
     unsigned char * c = (unsigned char *) &v;
-    cerr << std::hex << (unsigned int) c[1] << endl;
-    cerr << std::hex << (unsigned int) c[0] << endl;
-    cerr << std::hex << v << endl;
+    //cerr << std::hex << (unsigned int) c[1] << endl;
+    //cerr << std::hex << (unsigned int) c[0] << endl;
+    //cerr << std::hex << v << endl;
 
     if (s == 1) {
         return c[0];
@@ -141,22 +136,20 @@ void outputUTF8(unsigned long raw) {
         v = keep;
         s = 2;
 
-        cerr << "dump raw:  " << octet2bin(raw) << "-> " << octet2bin(v)
-                << endl;
+        //cerr << "dump raw:  " << octet2bin(raw) << "-> " << octet2bin(v) << endl;
 
     } else if (raw <= 0xffff) {
 
-        cerr << "dump raw:  " << octet2bin(raw) << endl;
-        cerr << "dump help: " << octet2bin(0x80) << endl;
+        //cerr << "dump raw:  " << octet2bin(raw) << endl;
+        //cerr << "dump help: " << octet2bin(0x80) << endl;
 
         long keep = (raw & 0xff & ~0xc0) | 0x80;
 
         keep = ((raw << 2) & 0xff00 & ~0xc0ff) | 0x8000 | keep;
-        keep = ((raw << 4) & 0x0f0000) | 0xe00000 | keep;
-        v = keep;
+        v = ((raw << 4) & 0x0f0000) | 0xe00000 | keep;
         s = 3;
 
-        cerr << "dump done: " << octet2bin(v) << endl;
+        //cerr << "dump done: " << octet2bin(v) << endl;
 
     } else if (raw <= 0x10ffff) {
         cerr << "unandled range of codepoints" << endl;
@@ -173,9 +166,14 @@ void outputUTF8(unsigned long raw) {
 
 int main(void) {
 
-    string s =
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elit orci, elementum ac semper non, semper ut arcu. Nulla sit amet facilisis quam. Nunc vitae dolor a lacus vehicula dapibus ac ut nunc. Mauris cursus viverra est quis aliquam. Aenean nec ante at metus laoreet ultrices id porttitor orci. Integer et ligula eu dui tempus consectetur egestas quis nisl. Integer sed lacus rhoncus sem luctus condimentum. Duis mollis scelerisque risus ut fringilla. Sed ut enim mattis odio pulvinar porttitor. Nam at eros nec mi feugiat volutpat ut sed dui.\nPraesent sapien velit, malesuada at tincidunt in, mollis in eros. Sed semper nisl in neque egestas varius. Morbi eleifend bibendum metus, sed molestie neque cursus at. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam eget justo enim, tincidunt dignissim tellus. In non nulla metus, at porttitor sem. Suspendisse potenti. Donec eleifend suscipit tellus malesuada egestas. Duis a quam sem, at lobortis augue. Pellentesque nec nisi nec nisl lacinia eleifend viverra in velit. Fusce suscipit, ipsum ut tempor egestas, dui elit imperdiet erat, ornare fringilla magna velit sed urna. Maecenas eget justo est. Curabitur nec risus at ligula facilisis semper.";
-    s = "oh, wait...";
+    ostringstream oss;
+    oss << cin.rdbuf();
+
+    string s = oss.str();
+
+    //string s =
+    //"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elit orci, elementum ac semper non, semper ut arcu. Nulla sit amet facilisis quam. Nunc vitae dolor a lacus vehicula dapibus ac ut nunc. Mauris cursus viverra est quis aliquam. Aenean nec ante at metus laoreet ultrices id porttitor orci. Integer et ligula eu dui tempus consectetur egestas quis nisl. Integer sed lacus rhoncus sem luctus condimentum. Duis mollis scelerisque risus ut fringilla. Sed ut enim mattis odio pulvinar porttitor. Nam at eros nec mi feugiat volutpat ut sed dui.\nPraesent sapien velit, malesuada at tincidunt in, mollis in eros. Sed semper nisl in neque egestas varius. Morbi eleifend bibendum metus, sed molestie neque cursus at. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam eget justo enim, tincidunt dignissim tellus. In non nulla metus, at porttitor sem. Suspendisse potenti. Donec eleifend suscipit tellus malesuada egestas. Duis a quam sem, at lobortis augue. Pellentesque nec nisi nec nisl lacinia eleifend viverra in velit. Fusce suscipit, ipsum ut tempor egestas, dui elit imperdiet erat, ornare fringilla magna velit sed urna. Maecenas eget justo est. Curabitur nec risus at ligula facilisis semper.";
+    //s = "oh, wait...";
     size_t ll = s.size();
     string r = string(s.rbegin(), s.rend());
 
